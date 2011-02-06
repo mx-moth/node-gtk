@@ -5,42 +5,37 @@
 
 namespace nodeGtk {
 
-	struct SignalCallback {
-
-		const char *name;
-		GCallback callback;
-
-		SignalCallback (const char *name, GCallback callback) {
-			this->name = name;
-			this->callback = callback;
-		}
-
-	};
-
-	class Widget: public GtkObject {
+	class NodeGtkWidget: public NodeGtkObject {
 
 		public:
 
-			static std::vector<SignalCallback> *callbacks;
+			GtkWidget *widget;
 
 			// For getting the underlying GtkWidget
 			static inline GtkWidget* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return ObjectWrap::Unwrap<Widget>(obj)->widget;
+				return ObjectWrap::Unwrap<NodeGtkWidget>(obj)->widget;
 			}
 
 			static void SetupMethods(v8::Handle<v8::Object> target);
 			static void SetupCallbacks(std::vector<SignalCallback> *callbacks);
 			static void Initialize(v8::Handle<v8::Object> target);
 
-			static void onDestroy (GtkWidget *gktWidget, Widget *widget);
+			static void onDestroy (GtkWidget *gktWidget, NodeGtkWidget *widget);
 
 			void addRef();
 
-	};
+			/**
+			 * Retrieves a reference to this instance from the widget
+			 *
+			 * Parameters:
+			 *   object - The GtkWidget that holds the reference
+			 */
+			static NodeGtkWidget* From(GObject *object) {
+				return (NodeGtkWidget *)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+			}
 
-	void signal_bare(GtkWidget *widget, gpointer callback_ptr);
-	gboolean signal_boolean(GtkWidget *widget, gpointer callback_ptr);
+	};
 
 
 } // namespace ngtk

@@ -7,27 +7,13 @@ namespace nodeGtk {
 	using namespace v8;
 	using namespace node;
 
-
-	/*
-	Handle<Value> gtk_box* (const Arguments &args) {
-		HandleScope scope;
-
-		GtkContainer *container = Container::Data(args[0]->ToObject());
-		GtkWidget *widget = Widget::Data(args[1]->ToObject());
-
-		gtk_box_*(container, widget);
-
-		return Undefined();
-	}
-	*/
-
 	/**
 	 * Attach all box methods to the target
 	 *
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Box::SetupMethods (Handle<Object> target) {
+	void NodeGtkBox::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 	}
 
@@ -37,8 +23,8 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Box::SetupCallbacks (std::vector<SignalCallback> *callbacks) {
-		Container::SetupCallbacks(callbacks);
+	void NodeGtkBox::SetupCallbacks (std::vector<SignalCallback> *callbacks) {
+		NodeGtkContainer::SetupCallbacks(callbacks);
 	}
 
 	/**
@@ -47,12 +33,12 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Box::Initialize (Handle<Object> target) {
+	void NodeGtkBox::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Attach methods to the target
-		Box::SetupMethods(target);
-		Box::SetupCallbacks(callbacks);
+		NodeGtkBox::SetupMethods(target);
+		NodeGtkBox::SetupCallbacks(callbacks);
 
 	}
 }

@@ -5,7 +5,7 @@
 
 namespace nodeGtk {
 
-	class HBox: public nodeGtk::Box {
+	class NodeGtkHBox: public NodeGtkBox {
 
 		public:
 
@@ -14,7 +14,7 @@ namespace nodeGtk {
 			/**
 			 * Constructor. Creates a new HBox, which will wrap a new GtkHBox
 			 */
-			HBox(gboolean homogeneous, gint spacing);
+			NodeGtkHBox(gboolean homogeneous, gint spacing);
 
 			/**
 			 * Checks to see if a v8::Object is a HBox in disguise
@@ -51,12 +51,22 @@ namespace nodeGtk {
 			 */
 			static inline GtkHBox* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_HBOX(ObjectWrap::Unwrap<HBox>(obj)->widget);
+				return GTK_HBOX(ObjectWrap::Unwrap<NodeGtkHBox>(obj)->widget);
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
 			static void SetupCallbacks(std::vector<SignalCallback> *callbacks);
 			static void Initialize (v8::Handle<v8::Object> target);
+
+			/**
+			 * Retrieves a reference to this instance from the widget
+			 *
+			 * Parameters:
+			 *   object - The GtkHBox that holds the reference
+			 */
+			static NodeGtkHBox* From(GtkHBox *object) {
+				return (NodeGtkHBox*)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+			}
 
 	};
 

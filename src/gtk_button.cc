@@ -10,7 +10,7 @@ namespace nodeGtk {
 	/**
 	 * The class constructor for Buttons
 	 */
-	Persistent<FunctionTemplate> Button::constructor_template;
+	Persistent<FunctionTemplate> NodeGtkButton::constructor_template;
 
 	/**
 	 * Creates a new Button
@@ -18,9 +18,13 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   type - One of the GtkButtonTypes
 	 */
-	Button::Button () {
+	NodeGtkButton::NodeGtkButton () {
 		widget = gtk_button_new();
 		addRef();
+
+		// Make a new JavaScript object and return it
+		obj = NodeGtkButton::constructor_template->GetFunction()->NewInstance();
+		obj->SetInternalField(0, External::New(this));
 	}
 
 	/**
@@ -35,12 +39,9 @@ namespace nodeGtk {
 	Handle<Value> gtk_button_new (const Arguments &args) {
 		HandleScope scope;
 
-		Button *button = new Button();
+		NodeGtkButton *button = new NodeGtkButton();
 
-		// Make a new JavaScript object and return it
-		Local<Object> obj = Button::constructor_template->GetFunction()->NewInstance();
-		obj->SetInternalField(0, External::New(button));
-		return obj;
+		return button->obj;
 	}
 
 	/*
@@ -51,31 +52,31 @@ GtkWidget*  gtk_button_new_from_stock       (const gchar *stock_id);
 
 	Handle<Value> gtk_button_pressed(const Arguments &args) {
 		HandleScope scope;
-		GtkButton *button = Button::Data(args[0]->ToObject());
+		GtkButton *button = NodeGtkButton::Data(args[0]->ToObject());
 		gtk_button_pressed(button);
 		return Undefined();
 	}
 	Handle<Value> gtk_button_released(const Arguments &args) {
 		HandleScope scope;
-		GtkButton *button = Button::Data(args[0]->ToObject());
+		GtkButton *button = NodeGtkButton::Data(args[0]->ToObject());
 		gtk_button_released(button);
 		return Undefined();
 	}
 	Handle<Value> gtk_button_clicked(const Arguments &args) {
 		HandleScope scope;
-		GtkButton *button = Button::Data(args[0]->ToObject());
+		GtkButton *button = NodeGtkButton::Data(args[0]->ToObject());
 		gtk_button_clicked(button);
 		return Undefined();
 	}
 	Handle<Value> gtk_button_enter(const Arguments &args) {
 		HandleScope scope;
-		GtkButton *button = Button::Data(args[0]->ToObject());
+		GtkButton *button = NodeGtkButton::Data(args[0]->ToObject());
 		gtk_button_enter(button);
 		return Undefined();
 	}
 	Handle<Value> gtk_button_leave(const Arguments &args) {
 		HandleScope scope;
-		GtkButton *button = Button::Data(args[0]->ToObject());
+		GtkButton *button = NodeGtkButton::Data(args[0]->ToObject());
 		gtk_button_leave(button);
 		return Undefined();
 	}
@@ -87,7 +88,7 @@ GtkWidget*  gtk_button_new_from_stock       (const gchar *stock_id);
 
 	Handle<Value> gtk_button_get_label(const Arguments &args) {
 		HandleScope scope;
-		GtkButton *button = Button::Data(args[0]->ToObject());
+		GtkButton *button = NodeGtkButton::Data(args[0]->ToObject());
 		const gchar *label = gtk_button_get_label(button);
 		return scope.Close(String::New(label));
 	}
@@ -95,7 +96,7 @@ GtkWidget*  gtk_button_new_from_stock       (const gchar *stock_id);
 	Handle<Value> gtk_button_set_label(const Arguments &args) {
 		HandleScope scope;
 
-		GtkButton *button = Button::Data(args[0]->ToObject());
+		GtkButton *button = NodeGtkButton::Data(args[0]->ToObject());
 		String::AsciiValue label(args[1]->ToString());
 
 		gtk_button_set_label(button, *label);
@@ -119,7 +120,7 @@ GtkWidget*  gtk_button_new_from_stock       (const gchar *stock_id);
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Button::SetupMethods (Handle<Object> target) {
+	void NodeGtkButton::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 
 		target->Set(v8::String::NewSymbol("button_new"), v8::FunctionTemplate::New(gtk_button_new)->GetFunction());
@@ -132,8 +133,8 @@ GtkWidget*  gtk_button_new_from_stock       (const gchar *stock_id);
 		target->Set(v8::String::NewSymbol("button_get_label"), v8::FunctionTemplate::New(gtk_button_get_label)->GetFunction());
 	}
 
-	void Button::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
-		Bin::SetupCallbacks(callbacks);
+	void NodeGtkButton::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
+		NodeGtkBin::SetupCallbacks(callbacks);
 		(*callbacks).push_back(SignalCallback("activate", G_CALLBACK(signal_bare)));
 		(*callbacks).push_back(SignalCallback("clicked", G_CALLBACK(signal_bare)));
 		(*callbacks).push_back(SignalCallback("enter", G_CALLBACK(signal_bare)));
@@ -148,7 +149,7 @@ GtkWidget*  gtk_button_new_from_stock       (const gchar *stock_id);
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Button::Initialize (Handle<Object> target) {
+	void NodeGtkButton::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Create a new JavaScript class
@@ -161,8 +162,8 @@ GtkWidget*  gtk_button_new_from_stock       (const gchar *stock_id);
 		buttonInstance->SetInternalFieldCount(1);
 
 		// Attach methods to the target
-		Button::SetupMethods(target);
+		NodeGtkButton::SetupMethods(target);
 
-		Button::SetupCallbacks(callbacks);
+		NodeGtkButton::SetupCallbacks(callbacks);
 	}
 }

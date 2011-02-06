@@ -3,19 +3,20 @@
 #include <ev.h>
 #include <stdlib.h> // malloc, free
 
-#include "gtk_window.h"
-#include "gtk_container.h"
+#include "g_object.h"
+#include "gtk_object.h"
+#include "gtk_widget.h"
 #include "gtk_bin.h"
+#include "gtk_container.h"
+#include "gtk_window.h"
 #include "gtk_box.h"
 #include "gtk_hbox.h"
 #include "gtk_vbox.h"
-#include "gtk_entry.h"
 #include "gtk_button.h"
-#include "gtk_widget.h"
+#include "gtk_entry.h"
 #include "gtk_misc.h"
 #include "gtk_label.h"
-#include "gtk_object.h"
-#include "g_object.h"
+#include "gtk_tree_store.h"
 
 namespace nodeGtk {
 
@@ -211,17 +212,18 @@ extern "C" void init(Handle<Object> target) {
   GMainContext *gc     = g_main_context_default();
   struct econtext *ctx = &default_context;
 
-  Widget::Initialize(target);
-  Container::Initialize(target);
-  Bin::Initialize(target);
-  Box::Initialize(target);
-  HBox::Initialize(target);
-  VBox::Initialize(target);
-  Window::Initialize(target);
-  Entry::Initialize(target);
-  Button::Initialize(target);
-  Misc::Initialize(target);
-  Label::Initialize(target);
+  NodeGtkWidget::Initialize(target);
+  NodeGtkContainer::Initialize(target);
+  NodeGtkBin::Initialize(target);
+  NodeGtkBox::Initialize(target);
+  NodeGtkHBox::Initialize(target);
+  NodeGtkVBox::Initialize(target);
+  NodeGtkWindow::Initialize(target);
+  NodeGtkEntry::Initialize(target);
+  NodeGtkButton::Initialize(target);
+  NodeGtkMisc::Initialize(target);
+  NodeGtkLabel::Initialize(target);
+  NodeGtkTreeStore::Initialize(target);
 
   ctx->gc  = g_main_context_ref(gc);
   ctx->nfd = 0;

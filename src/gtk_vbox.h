@@ -5,7 +5,7 @@
 
 namespace nodeGtk {
 
-	class VBox: public nodeGtk::Box {
+	class NodeGtkVBox: public NodeGtkBox {
 
 		public:
 
@@ -14,7 +14,7 @@ namespace nodeGtk {
 			/**
 			 * Constructor. Creates a new VBox, which will wrap a new GtkVBox
 			 */
-			VBox(gboolean homogeneous, gint spacing);
+			NodeGtkVBox(gboolean homogeneous, gint spacing);
 
 			/**
 			 * Checks to see if a v8::Object is a VBox in disguise
@@ -51,12 +51,22 @@ namespace nodeGtk {
 			 */
 			static inline GtkVBox* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_VBOX(ObjectWrap::Unwrap<VBox>(obj)->widget);
+				return GTK_VBOX(ObjectWrap::Unwrap<NodeGtkVBox>(obj)->widget);
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
 			static void SetupCallbacks(std::vector<SignalCallback> *callbacks);
 			static void Initialize (v8::Handle<v8::Object> target);
+
+			/**
+			 * Retrieves a reference to this instance from the widget
+			 *
+			 * Parameters:
+			 *   object - The GtkVBox that holds the reference
+			 */
+			static NodeGtkVBox* From(GtkVBox *object) {
+				return (NodeGtkVBox*)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+			}
 
 	};
 

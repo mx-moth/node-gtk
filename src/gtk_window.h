@@ -8,7 +8,7 @@
 
 namespace nodeGtk {
 
-	class Window: public nodeGtk::Bin {
+	class NodeGtkWindow: public nodeGtk::NodeGtkBin {
 
 		public:
 
@@ -20,7 +20,7 @@ namespace nodeGtk {
 			 * Parameters:
 			 *   type - The window type
 			 */
-			Window(GtkWindowType type);
+			NodeGtkWindow(GtkWindowType type);
 
 			/**
 			 * Checks to see if a v8::Object is a Window in disguise
@@ -57,12 +57,22 @@ namespace nodeGtk {
 			 */
 			static inline GtkWindow* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				assert(Window::HasInstance(obj));
-				return GTK_WINDOW(ObjectWrap::Unwrap<Window>(obj)->widget);
+				assert(NodeGtkWindow::HasInstance(obj));
+				return GTK_WINDOW(ObjectWrap::Unwrap<NodeGtkWindow>(obj)->widget);
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
 			static void Initialize (v8::Handle<v8::Object> target);
+
+			/**
+			 * Retrieves a reference to this instance from the widget
+			 *
+			 * Parameters:
+			 *   object - The GtkWindow that holds the reference
+			 */
+			static NodeGtkWindow* From(GtkWindow *object) {
+				return (NodeGtkWindow *)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+			}
 
 	};
 

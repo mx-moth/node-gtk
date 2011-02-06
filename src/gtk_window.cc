@@ -10,7 +10,7 @@ namespace nodeGtk {
 	/**
 	 * The class constructor for Windows
 	 */
-	Persistent<FunctionTemplate> Window::constructor_template;
+	Persistent<FunctionTemplate> NodeGtkWindow::constructor_template;
 
 	/**
 	 * Creates a new Window
@@ -18,13 +18,13 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   type - One of the GtkWindowTypes
 	 */
-	Window::Window (GtkWindowType type) {
+	NodeGtkWindow::NodeGtkWindow (GtkWindowType type) {
 		// Make a new widget
 		widget = gtk_window_new(type);
 		// Add references to this
 		addRef();
 		// Wrap this in a JavaScript object
-		obj = Window::constructor_template->GetFunction()->NewInstance();
+		obj = NodeGtkWindow::constructor_template->GetFunction()->NewInstance();
 		obj->SetInternalField(0, External::New(this));
 	}
 
@@ -43,7 +43,7 @@ namespace nodeGtk {
 		assert(args[0]->IsNumber());
 
 		GtkWindowType type = (GtkWindowType)args[0]->ToNumber()->IntegerValue();
-		Window *window = new Window(type);
+		NodeGtkWindow *window = new NodeGtkWindow(type);
 
 		return window->obj;
 	}
@@ -57,10 +57,10 @@ namespace nodeGtk {
 	Handle<Value> gtk_window_set_title (const Arguments &args) {
 		HandleScope scope;
 
-		assert(Window::HasInstance(args[0]->ToObject()));
+		assert(NodeGtkWindow::HasInstance(args[0]->ToObject()));
 		assert(args[1]->IsString());
 
-		GtkWindow *window = Window::Data(args[0]->ToObject());
+		GtkWindow *window = NodeGtkWindow::Data(args[0]->ToObject());
 		String::AsciiValue title(args[1]->ToString());
 		gtk_window_set_title(window, *title);
 
@@ -74,7 +74,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Window::SetupMethods (Handle<Object> target) {
+	void NodeGtkWindow::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 
 		target->Set(v8::String::NewSymbol("window_new"), v8::FunctionTemplate::New(gtk_window_new)->GetFunction());
@@ -87,7 +87,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Window::Initialize (Handle<Object> target) {
+	void NodeGtkWindow::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Create a new JavaScript class
@@ -100,7 +100,7 @@ namespace nodeGtk {
 		windowInstance->SetInternalFieldCount(1);
 
 		// Attach methods to the target
-		Window::SetupMethods(target);
+		NodeGtkWindow::SetupMethods(target);
 
 	}
 }

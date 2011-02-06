@@ -5,19 +5,19 @@
 
 namespace nodeGtk {
 
-	class Entry: public nodeGtk::Widget {
+	class NodeGtkEntry: public NodeGtkWidget {
 
 		public:
 
 			static v8::Persistent<v8::FunctionTemplate> constructor_template;
 
 			/**
-			 * Constructor. Creates a new Entry, which will wrap a new GtkEntry
+			 * Constructor. Creates a new NodeGtkEntry, which will wrap a new GtkEntry
 			 */
-			Entry();
+			NodeGtkEntry();
 
 			/**
-			 * Checks to see if a v8::Object is a Entry in disguise
+			 * Checks to see if a v8::Object is a NodeGtkEntry in disguise
 			 *
 			 * Parameters:
 			 *   obj - The object to check for Entryness
@@ -43,20 +43,30 @@ namespace nodeGtk {
 			 *
 			 * Usage:
 			 * (code)
-			 * GtkEntry *entry = Entry::Data(args[n]->ToObject());
+			 * GtkEntry *entry = NodeGtkEntry::Data(args[n]->ToObject());
 			 * (end)
 			 *
 			 * Returns:
-			 * The pointer to the GtkEntry contained in this Entry
+			 * The pointer to the GtkEntry contained in this NodeGtkEntry
 			 */
 			static inline GtkEntry* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_ENTRY(ObjectWrap::Unwrap<Entry>(obj)->widget);
+				return GTK_ENTRY(ObjectWrap::Unwrap<NodeGtkEntry>(obj)->widget);
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
 			static void SetupCallbacks(std::vector<SignalCallback> *callbacks);
 			static void Initialize (v8::Handle<v8::Object> target);
+
+			/**
+			 * Retrieves a reference to this instance from the widget
+			 *
+			 * Parameters:
+			 *   object - The GtkEntry that holds the reference
+			 */
+			static NodeGtkEntry* From(GtkEntry *object) {
+				return (NodeGtkEntry*)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+			}
 
 	};
 

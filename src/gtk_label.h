@@ -5,7 +5,7 @@
 
 namespace nodeGtk {
 
-	class Label: public nodeGtk::Misc {
+	class NodeGtkLabel: public NodeGtkMisc {
 
 		public:
 
@@ -14,7 +14,7 @@ namespace nodeGtk {
 			/**
 			 * Constructor. Creates a new Label, which will wrap a new GtkLabel
 			 */
-			Label(gchar *text);
+			NodeGtkLabel(gchar *text);
 
 			/**
 			 * Checks to see if a v8::Object is a Label in disguise
@@ -51,12 +51,22 @@ namespace nodeGtk {
 			 */
 			static inline GtkLabel* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_LABEL(ObjectWrap::Unwrap<Label>(obj)->widget);
+				return GTK_LABEL(ObjectWrap::Unwrap<NodeGtkLabel>(obj)->widget);
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
 			static void SetupCallbacks(std::vector<SignalCallback> *callbacks);
 			static void Initialize (v8::Handle<v8::Object> target);
+
+			/**
+			 * Retrieves a reference to this instance from the widget
+			 *
+			 * Parameters:
+			 *   object - The GtkLabel that holds the reference
+			 */
+			static NodeGtkLabel* From(GtkLabel *object) {
+				return (NodeGtkLabel*)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+			}
 
 	};
 

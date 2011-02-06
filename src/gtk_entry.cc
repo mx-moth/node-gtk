@@ -10,50 +10,50 @@ namespace nodeGtk {
 	/**
 	 * The class constructor for Entrys
 	 */
-	Persistent<FunctionTemplate> Entry::constructor_template;
+	Persistent<FunctionTemplate> NodeGtkEntry::constructor_template;
 
 	/**
-	 * Creates a new Entry
+	 * Creates a new NodeGtkEntry
 	 *
 	 * Parameters:
 	 *   type - One of the GtkEntryTypes
 	 */
-	Entry::Entry () {
+	NodeGtkEntry::NodeGtkEntry () {
 		widget = gtk_entry_new();
 		addRef();
+
+		obj = NodeGtkEntry::constructor_template->GetFunction()->NewInstance();
+		obj->SetInternalField(0, External::New(this));
 	}
 
 	/**
-	 * Creates a new Entry and attaches it to a JavaScript object
+	 * Creates a new NodeGtkEntry and attaches it to a JavaScript object
 	 *
 	 * Parameters:
 	 *   type - One of the GtkEntryTypes
 	 *
 	 * Returns:
-	 * A new instance of the Entry class
+	 * A new instance of the NodeGtkEntry class
 	 */
 	Handle<Value> gtk_entry_new (const Arguments &args) {
 		HandleScope scope;
 
-		Entry *entry = new Entry();
+		NodeGtkEntry *entry = new NodeGtkEntry();
 
-		// Make a new JavaScript object and return it
-		Local<Object> obj = Entry::constructor_template->GetFunction()->NewInstance();
-		obj->SetInternalField(0, External::New(entry));
-		return obj;
+		return entry->obj;
 	}
 
 	/**
 	 * Sets the text of an entry
 	 *
 	 * Parameters:
-	 *   entry - The Entry to set the text of
+	 *   entry - The NodeGtkEntry to set the text of
 	 *   text - The text to put in the entry
 	 */
 	Handle<Value> gtk_entry_set_text(const Arguments &args) {
 		HandleScope scope;
 
-		GtkEntry *entry = Entry::Data(args[0]->ToObject());
+		GtkEntry *entry = NodeGtkEntry::Data(args[0]->ToObject());
 		String::AsciiValue text(args[1]->ToString());
 
 		gtk_entry_set_text(entry, *text);
@@ -65,15 +65,15 @@ namespace nodeGtk {
 	 * Gets the text of an entry
 	 *
 	 * Parameters:
-	 *   entry - The Entry to get the text from
+	 *   entry - The NodeGtkEntry to get the text from
 	 *
 	 * Returns:
-	 * The text from the Entry
+	 * The text from the NodeGtkEntry
 	 */
 	Handle<Value> gtk_entry_get_text(const Arguments &args) {
 		HandleScope scope;
 
-		GtkEntry *entry = Entry::Data(args[0]->ToObject());
+		GtkEntry *entry = NodeGtkEntry::Data(args[0]->ToObject());
 
 		return scope.Close(String::New(gtk_entry_get_text(entry)));
 	}
@@ -82,15 +82,15 @@ namespace nodeGtk {
 	 * Gets the lenght of the text of an entry
 	 *
 	 * Parameters:
-	 *   entry - The Entry to get the text from
+	 *   entry - The NodeGtkEntry to get the text from
 	 *
 	 * Returns:
-	 * The length of the text from the Entry
+	 * The length of the text from the NodeGtkEntry
 	 */
 	Handle<Value> gtk_entry_get_text_length(const Arguments &args) {
 		HandleScope scope;
 
-		GtkEntry *entry = Entry::Data(args[0]->ToObject());
+		GtkEntry *entry = NodeGtkEntry::Data(args[0]->ToObject());
 
 		return scope.Close(Number::New(gtk_entry_get_text_length(entry)));
 	}
@@ -101,13 +101,13 @@ namespace nodeGtk {
 	 * entry field in to a password field.
 	 *
 	 * Parameters:
-	 *   entry - The Entry to work with
+	 *   entry - The NodeGtkEntry to work with
 	 *   visible - The visibility of the text
 	 */
 	Handle<Value> gtk_entry_set_visibility(const Arguments &args) {
 		HandleScope scope;
 
-		GtkEntry *entry = Entry::Data(args[0]->ToObject());
+		GtkEntry *entry = NodeGtkEntry::Data(args[0]->ToObject());
 		bool visible = args[1]->ToBoolean()->Value();
 
 		gtk_entry_set_visibility(entry, visible);
@@ -120,7 +120,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Entry::SetupMethods (Handle<Object> target) {
+	void NodeGtkEntry::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 
 		target->Set(v8::String::NewSymbol("entry_new"), v8::FunctionTemplate::New(gtk_entry_new)->GetFunction());
@@ -130,8 +130,8 @@ namespace nodeGtk {
 		target->Set(v8::String::NewSymbol("entry_set_visibility"), v8::FunctionTemplate::New(gtk_entry_set_visibility)->GetFunction());
 	}
 
-	void Entry::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
-		Widget::SetupCallbacks(callbacks);
+	void NodeGtkEntry::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
+		NodeGtkWidget::SetupCallbacks(callbacks);
 		//TODO This should be part of the Editable class, but I've not made it yet
 		(*callbacks).push_back(SignalCallback("changed", G_CALLBACK(signal_bare)));
 
@@ -159,7 +159,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Entry::Initialize (Handle<Object> target) {
+	void NodeGtkEntry::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Create a new JavaScript class
@@ -172,8 +172,8 @@ namespace nodeGtk {
 		entryInstance->SetInternalFieldCount(1);
 
 		// Attach methods to the target
-		Entry::SetupMethods(target);
+		NodeGtkEntry::SetupMethods(target);
 
-		Entry::SetupCallbacks(callbacks);
+		NodeGtkEntry::SetupCallbacks(callbacks);
 	}
 }

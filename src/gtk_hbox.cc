@@ -10,7 +10,7 @@ namespace nodeGtk {
 	/**
 	 * The class constructor for HBoxs
 	 */
-	Persistent<FunctionTemplate> HBox::constructor_template;
+	Persistent<FunctionTemplate> NodeGtkHBox::constructor_template;
 
 	/**
 	 * Creates a new HBox
@@ -18,7 +18,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   type - One of the GtkHBoxTypes
 	 */
-	HBox::HBox (gboolean homogeneous, gint spacing) {
+	NodeGtkHBox::NodeGtkHBox (gboolean homogeneous, gint spacing) {
 		widget = gtk_hbox_new(homogeneous, spacing);
 		addRef();
 	}
@@ -38,10 +38,10 @@ namespace nodeGtk {
 		bool homogeneous = args[0]->ToBoolean()->Value();
 		int spacing = (int)args[1]->ToNumber()->Value();
 
-		HBox *hbox = new HBox((gboolean)homogeneous, (gint)spacing);
+		NodeGtkHBox *hbox = new NodeGtkHBox((gboolean)homogeneous, (gint)spacing);
 
 		// Make a new JavaScript object and return it
-		Local<Object> obj = HBox::constructor_template->GetFunction()->NewInstance();
+		Local<Object> obj = NodeGtkHBox::constructor_template->GetFunction()->NewInstance();
 		obj->SetInternalField(0, External::New(hbox));
 		return obj;
 	}
@@ -52,14 +52,14 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void HBox::SetupMethods (Handle<Object> target) {
+	void NodeGtkHBox::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 
 		target->Set(v8::String::NewSymbol("hbox_new"), v8::FunctionTemplate::New(gtk_hbox_new)->GetFunction());
 	}
 
-	void HBox::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
-		Box::SetupCallbacks(callbacks);
+	void NodeGtkHBox::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
+		NodeGtkBox::SetupCallbacks(callbacks);
 	}
 
 	/**
@@ -68,7 +68,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void HBox::Initialize (Handle<Object> target) {
+	void NodeGtkHBox::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Create a new JavaScript class
@@ -81,7 +81,7 @@ namespace nodeGtk {
 		hboxInstance->SetInternalFieldCount(1);
 
 		// Attach methods to the target
-		HBox::SetupMethods(target);
-		HBox::SetupCallbacks(callbacks);
+		NodeGtkHBox::SetupMethods(target);
+		NodeGtkHBox::SetupCallbacks(callbacks);
 	}
 }

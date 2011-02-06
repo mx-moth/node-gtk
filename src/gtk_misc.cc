@@ -10,7 +10,7 @@ namespace nodeGtk {
 	Handle<Value> gtk_misc_set_alignment (const Arguments &args) {
 		HandleScope scope;
 
-		GtkMisc *misc = Misc::Data(args[0]->ToObject());
+		GtkMisc *misc = NodeGtkMisc::Data(args[0]->ToObject());
 		float xalign = args[1]->ToNumber()->Value();
 		float yalign = args[2]->ToNumber()->Value();
 
@@ -22,7 +22,7 @@ namespace nodeGtk {
 	Handle<Value> gtk_misc_set_padding (const Arguments &args) {
 		HandleScope scope;
 
-		GtkMisc *misc = Misc::Data(args[0]->ToObject());
+		GtkMisc *misc = NodeGtkMisc::Data(args[0]->ToObject());
 		int xpad = (int)args[1]->ToNumber()->Value();
 		int ypad = (int)args[2]->ToNumber()->Value();
 
@@ -34,7 +34,7 @@ namespace nodeGtk {
 	Handle<Value> gtk_misc_get_alignment (const Arguments &args) {
 		HandleScope scope;
 
-		GtkMisc *misc = Misc::Data(args[0]->ToObject());
+		GtkMisc *misc = NodeGtkMisc::Data(args[0]->ToObject());
 		gfloat xalign = 0;
 		gfloat yalign = 0;
 
@@ -49,7 +49,7 @@ namespace nodeGtk {
 	Handle<Value> gtk_misc_get_padding (const Arguments &args) {
 		HandleScope scope;
 
-		GtkMisc *misc = Misc::Data(args[0]->ToObject());
+		GtkMisc *misc = NodeGtkMisc::Data(args[0]->ToObject());
 		gint xpad = 0;
 		gint ypad = 0;
 
@@ -68,7 +68,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Misc::SetupMethods (Handle<Object> target) {
+	void NodeGtkMisc::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 
 		target->Set(v8::String::NewSymbol("misc_set_padding"),   v8::FunctionTemplate::New(gtk_misc_set_padding)->GetFunction());
@@ -83,8 +83,8 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Misc::SetupCallbacks (std::vector<SignalCallback> *callbacks) {
-		Widget::SetupCallbacks(callbacks);
+	void NodeGtkMisc::SetupCallbacks (std::vector<SignalCallback> *callbacks) {
+		NodeGtkWidget::SetupCallbacks(callbacks);
 	}
 
 	/**
@@ -93,12 +93,12 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Misc::Initialize (Handle<Object> target) {
+	void NodeGtkMisc::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Attach methods to the target
-		Misc::SetupMethods(target);
-		Misc::SetupCallbacks(callbacks);
+		NodeGtkMisc::SetupMethods(target);
+		NodeGtkMisc::SetupCallbacks(callbacks);
 	}
 
 }

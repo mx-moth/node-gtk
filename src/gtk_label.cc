@@ -10,7 +10,7 @@ namespace nodeGtk {
 	/**
 	 * The class constructor for Labels
 	 */
-	Persistent<FunctionTemplate> Label::constructor_template;
+	Persistent<FunctionTemplate> NodeGtkLabel::constructor_template;
 
 	/**
 	 * Creates a new Label
@@ -18,10 +18,10 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   type - One of the GtkLabelTypes
 	 */
-	Label::Label (gchar *text) {
+	NodeGtkLabel::NodeGtkLabel (gchar *text) {
 		widget = gtk_label_new(text);
 		addRef();
-		obj = Label::constructor_template->GetFunction()->NewInstance();
+		obj = NodeGtkLabel::constructor_template->GetFunction()->NewInstance();
 		obj->SetInternalField(0, External::New(this));
 	}
 
@@ -38,7 +38,7 @@ namespace nodeGtk {
 		HandleScope scope;
 
 		String::AsciiValue text(args[0]->ToString());
-		Label *label = new Label((gchar*)*text);
+		NodeGtkLabel *label = new NodeGtkLabel((gchar*)*text);
 
 		// Make a new JavaScript object and return it
 		return label->obj;
@@ -54,7 +54,7 @@ namespace nodeGtk {
 	Handle<Value> gtk_label_set_text(const Arguments &args) {
 		HandleScope scope;
 
-		GtkLabel *label = Label::Data(args[0]->ToObject());
+		GtkLabel *label = NodeGtkLabel::Data(args[0]->ToObject());
 		String::AsciiValue text(args[1]->ToString());
 
 		gtk_label_set_text(label, *text);
@@ -74,7 +74,7 @@ namespace nodeGtk {
 	Handle<Value> gtk_label_get_text(const Arguments &args) {
 		HandleScope scope;
 
-		GtkLabel *label = Label::Data(args[0]->ToObject());
+		GtkLabel *label = NodeGtkLabel::Data(args[0]->ToObject());
 
 		return scope.Close(String::New(gtk_label_get_text(label)));
 	}
@@ -85,7 +85,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Label::SetupMethods (Handle<Object> target) {
+	void NodeGtkLabel::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 
 		target->Set(v8::String::NewSymbol("label_new"), v8::FunctionTemplate::New(gtk_label_new)->GetFunction());
@@ -93,8 +93,8 @@ namespace nodeGtk {
 		target->Set(v8::String::NewSymbol("label_get_text"), v8::FunctionTemplate::New(gtk_label_get_text)->GetFunction());
 	}
 
-	void Label::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
-		Misc::SetupCallbacks(callbacks);
+	void NodeGtkLabel::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
+		NodeGtkMisc::SetupCallbacks(callbacks);
 		//TODO Callbacks for this
 	}
 
@@ -104,7 +104,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Label::Initialize (Handle<Object> target) {
+	void NodeGtkLabel::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Create a new JavaScript class
@@ -117,8 +117,8 @@ namespace nodeGtk {
 		labelInstance->SetInternalFieldCount(1);
 
 		// Attach methods to the target
-		Label::SetupMethods(target);
+		NodeGtkLabel::SetupMethods(target);
 
-		Label::SetupCallbacks(callbacks);
+		NodeGtkLabel::SetupCallbacks(callbacks);
 	}
 }

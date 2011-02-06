@@ -10,7 +10,7 @@ namespace nodeGtk {
 	/**
 	 * The class constructor for VBoxs
 	 */
-	Persistent<FunctionTemplate> VBox::constructor_template;
+	Persistent<FunctionTemplate> NodeGtkVBox::constructor_template;
 
 	/**
 	 * Creates a new VBox
@@ -18,7 +18,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   type - One of the GtkVBoxTypes
 	 */
-	VBox::VBox (gboolean homogeneous, gint spacing) {
+	NodeGtkVBox::NodeGtkVBox (gboolean homogeneous, gint spacing) {
 		widget = gtk_vbox_new(homogeneous, spacing);
 		addRef();
 	}
@@ -38,10 +38,10 @@ namespace nodeGtk {
 		bool homogeneous = args[0]->ToBoolean()->Value();
 		int spacing = (int)args[1]->ToNumber()->Value();
 
-		VBox *vbox = new VBox((gboolean)homogeneous, (gint)spacing);
+		NodeGtkVBox *vbox = new NodeGtkVBox((gboolean)homogeneous, (gint)spacing);
 
 		// Make a new JavaScript object and return it
-		Local<Object> obj = VBox::constructor_template->GetFunction()->NewInstance();
+		Local<Object> obj = NodeGtkVBox::constructor_template->GetFunction()->NewInstance();
 		obj->SetInternalField(0, External::New(vbox));
 		return obj;
 	}
@@ -52,14 +52,14 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void VBox::SetupMethods (Handle<Object> target) {
+	void NodeGtkVBox::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 
 		target->Set(v8::String::NewSymbol("vbox_new"), v8::FunctionTemplate::New(gtk_vbox_new)->GetFunction());
 	}
 
-	void VBox::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
-		Box::SetupCallbacks(callbacks);
+	void NodeGtkVBox::SetupCallbacks(std::vector<SignalCallback> *callbacks) {
+		NodeGtkBox::SetupCallbacks(callbacks);
 	}
 
 	/**
@@ -68,7 +68,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void VBox::Initialize (Handle<Object> target) {
+	void NodeGtkVBox::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Create a new JavaScript class
@@ -81,7 +81,7 @@ namespace nodeGtk {
 		vboxInstance->SetInternalFieldCount(1);
 
 		// Attach methods to the target
-		VBox::SetupMethods(target);
-		VBox::SetupCallbacks(callbacks);
+		NodeGtkVBox::SetupMethods(target);
+		NodeGtkVBox::SetupCallbacks(callbacks);
 	}
 }

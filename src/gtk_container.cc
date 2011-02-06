@@ -20,8 +20,8 @@ namespace nodeGtk {
 	Handle<Value> gtk_container_add (const Arguments &args) {
 		HandleScope scope;
 
-		GtkContainer *container = Container::Data(args[0]->ToObject());
-		GtkWidget *widget = Widget::Data(args[1]->ToObject());
+		GtkContainer *container = NodeGtkContainer::Data(args[0]->ToObject());
+		GtkWidget *widget = NodeGtkWidget::Data(args[1]->ToObject());
 
 		gtk_container_add(container, widget);
 
@@ -35,7 +35,7 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Container::SetupMethods (Handle<Object> target) {
+	void NodeGtkContainer::SetupMethods (Handle<Object> target) {
 		HandleScope scope;
 
 		target->Set(v8::String::NewSymbol("container_add"), v8::FunctionTemplate::New(gtk_container_add)->GetFunction());
@@ -47,8 +47,8 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Container::SetupCallbacks (std::vector<SignalCallback> *callbacks) {
-		Widget::SetupCallbacks(callbacks);
+	void NodeGtkContainer::SetupCallbacks (std::vector<SignalCallback> *callbacks) {
+		NodeGtkWidget::SetupCallbacks(callbacks);
 	}
 
 	/**
@@ -57,12 +57,12 @@ namespace nodeGtk {
 	 * Parameters:
 	 *   target: The object to attach methods to
 	 */
-	void Container::Initialize (Handle<Object> target) {
+	void NodeGtkContainer::Initialize (Handle<Object> target) {
 		HandleScope scope;
 
 		// Attach methods to the target
-		Container::SetupMethods(target);
-		Container::SetupCallbacks(callbacks);
+		NodeGtkContainer::SetupMethods(target);
+		NodeGtkContainer::SetupCallbacks(callbacks);
 
 	}
 }
