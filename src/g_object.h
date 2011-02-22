@@ -1,12 +1,7 @@
 #ifndef G_OBJECT_H_
 #define G_OBJECT_H_
 
-#include <node_object_wrap.h> // node::ObjectWrap
-#include "gtk.h"
-#include <vector>
-#include <ev.h>
-#include <node.h>
-#include <string.h>
+#include "base.h"
 
 namespace nodeGtk {
 
@@ -22,19 +17,19 @@ namespace nodeGtk {
 
 	};
 
-	class NodeGObject : public node::ObjectWrap {
+	class NodeGObject : public NodeBase {
 		public:
 
 			static std::vector<SignalCallback> *callbacks;
 			GObject *widget;
-			v8::Local<v8::Object> obj;
 
 			/**
 			 * Stores a reference to this instance in the widget
 			 */
-			void storeSelfInWidget() {
+			void storeReference() {
 				g_object_set_data(G_OBJECT(this->widget), "NodeGTK-ref", (void *)this);
 			}
+                
 
 			/**
 			 * Retrieves a reference to this instance from the widget
@@ -43,8 +38,15 @@ namespace nodeGtk {
 			 *   object - The GObject that holds the reference
 			 */
 			static NodeGObject* From(GObject *object) {
-				return (NodeGObject *)(g_object_get_data(object, "NodeGTK-ref"));
+                NodeGObject *ref = (NodeGObject*)(g_object_get_data(G_OBJECT(object), "NodeGtk-wrapper"));
+				assert(ref != NULL);
+                return ref;
 			}
+
+			static void SetupConstants(v8::Handle<v8::Object> target);
+			static void SetupCallbacks(std::vector<SignalCallback> *callbacks);
+			static void SetupMethods(v8::Handle<v8::Object> target);
+			static void Initialize(v8::Handle<v8::Object> target); 
 
 	};
 

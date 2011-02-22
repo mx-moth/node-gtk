@@ -13,7 +13,7 @@ def configure(conf):
 
 def build(bld):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon", uselib = 'GTK')
-  obj.cxxflags = ["-Wall", "-ansi", "-pedantic"]
+  obj.cxxflags = ["-Wall", "-ansi", "-pedantic", "-std=c++0x"]
   obj.target = "gtk"
   obj.source = """
                src/gtk.cc
@@ -31,5 +31,11 @@ def build(bld):
                src/gtk_misc.cc
                src/gtk_label.cc
                src/gtk_tree_store.cc
+               src/gtk_tree_iter.cc
+               src/gtk_tree_view.cc
+               src/gtk_tree_view_column.cc
+               src/gtk_cell_renderer.cc
+               src/gtk_cell_renderer_text.cc
+               src/gtk_cell_renderer_toggle.cc
                """
   obj.uselib = "GTK GLIB"

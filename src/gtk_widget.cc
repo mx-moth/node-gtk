@@ -11,6 +11,10 @@ namespace nodeGtk {
 	 * Adds a reference to this widget, and sets it up for destruction later.
 	 */
 	void NodeGtkWidget::addRef() {
+		addRef(widget);
+	}
+
+	void NodeGtkWidget::addRef(GtkWidget *widget) {
 		// Listen for desruction so we can call ev_unref later
 		g_signal_connect(G_OBJECT(widget), "destroy", G_CALLBACK(NodeGtkWidget::onDestroy), (gpointer) this);
 

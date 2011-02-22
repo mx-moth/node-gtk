@@ -11,7 +11,7 @@ namespace nodeGtk {
 			// For getting the underlying GtkBox
 			static inline GtkBox* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_BOX(ObjectWrap::Unwrap<NodeGtkBox>(obj)->widget);
+				return GTK_BOX(ObjectWrap::Unwrap<NodeGtkBox>(obj)->getWidget());
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);

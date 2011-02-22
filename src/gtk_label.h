@@ -15,6 +15,7 @@ namespace nodeGtk {
 			 * Constructor. Creates a new Label, which will wrap a new GtkLabel
 			 */
 			NodeGtkLabel(gchar *text);
+			NodeGtkLabel(GtkLabel *label);
 
 			/**
 			 * Checks to see if a v8::Object is a Label in disguise
@@ -51,7 +52,7 @@ namespace nodeGtk {
 			 */
 			static inline GtkLabel* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_LABEL(ObjectWrap::Unwrap<NodeGtkLabel>(obj)->widget);
+				return GTK_LABEL(ObjectWrap::Unwrap<NodeGtkLabel>(obj)->getWidget());
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
@@ -65,7 +66,9 @@ namespace nodeGtk {
 			 *   object - The GtkLabel that holds the reference
 			 */
 			static NodeGtkLabel* From(GtkLabel *object) {
-				return (NodeGtkLabel*)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+				NodeGtkLabel *button;
+				NODE_GTK_GET_REF(object, button, NodeGtkLabel);
+				return button;
 			}
 
 	};

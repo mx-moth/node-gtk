@@ -12,20 +12,11 @@ namespace nodeGtk {
 	 */
 	Persistent<FunctionTemplate> NodeGtkWindow::constructor_template;
 
-	/**
-	 * Creates a new Window
-	 *
-	 * Parameters:
-	 *   type - One of the GtkWindowTypes
-	 */
-	NodeGtkWindow::NodeGtkWindow (GtkWindowType type) {
-		// Make a new widget
-		widget = gtk_window_new(type);
-		// Add references to this
+	NodeGtkWindow::NodeGtkWindow (GtkWidget *window) {
+		widget = GTK_WIDGET(window);
 		addRef();
-		// Wrap this in a JavaScript object
-		obj = NodeGtkWindow::constructor_template->GetFunction()->NewInstance();
-		obj->SetInternalField(0, External::New(this));
+		NODE_GTK_SET_REF(this, NodeGtkWindow);
+		newJavaScriptInstance(constructor_template);
 	}
 
 	/**
@@ -43,9 +34,10 @@ namespace nodeGtk {
 		assert(args[0]->IsNumber());
 
 		GtkWindowType type = (GtkWindowType)args[0]->ToNumber()->IntegerValue();
-		NodeGtkWindow *window = new NodeGtkWindow(type);
+		GtkWidget *window = gtk_window_new(type);
+		NodeGtkWindow *node_window = new NodeGtkWindow(window);
 
-		return window->obj;
+		return node_window->obj;
 	}
 
 	/**

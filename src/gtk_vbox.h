@@ -15,6 +15,7 @@ namespace nodeGtk {
 			 * Constructor. Creates a new VBox, which will wrap a new GtkVBox
 			 */
 			NodeGtkVBox(gboolean homogeneous, gint spacing);
+			NodeGtkVBox(GtkVBox *vbox);
 
 			/**
 			 * Checks to see if a v8::Object is a VBox in disguise
@@ -51,7 +52,7 @@ namespace nodeGtk {
 			 */
 			static inline GtkVBox* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_VBOX(ObjectWrap::Unwrap<NodeGtkVBox>(obj)->widget);
+				return GTK_VBOX(ObjectWrap::Unwrap<NodeGtkVBox>(obj)->getWidget());
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
@@ -65,7 +66,9 @@ namespace nodeGtk {
 			 *   object - The GtkVBox that holds the reference
 			 */
 			static NodeGtkVBox* From(GtkVBox *object) {
-				return (NodeGtkVBox*)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+				NodeGtkVBox *button;
+				NODE_GTK_GET_REF(object, button, NodeGtkVBox);
+				return button;
 			}
 
 	};

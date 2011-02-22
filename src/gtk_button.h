@@ -14,7 +14,7 @@ namespace nodeGtk {
 			/**
 			 * Constructor. Creates a new Button, which will wrap a new GtkButton
 			 */
-			NodeGtkButton();
+			NodeGtkButton(GtkWidget *button);
 
 			/**
 			 * Checks to see if a v8::Object is a Button in disguise
@@ -51,10 +51,11 @@ namespace nodeGtk {
 			 */
 			static inline GtkButton* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_BUTTON(ObjectWrap::Unwrap<NodeGtkButton>(obj)->widget);
+				return GTK_BUTTON(ObjectWrap::Unwrap<NodeGtkButton>(obj)->getWidget());
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
+			static void SetupConstants (v8::Handle<v8::Object> target);
 			static void SetupCallbacks(std::vector<SignalCallback> *callbacks);
 			static void Initialize (v8::Handle<v8::Object> target);
 
@@ -65,7 +66,9 @@ namespace nodeGtk {
 			 *   object - The GtkButton that holds the reference
 			 */
 			static NodeGtkButton* From(GtkButton *object) {
-				return (NodeGtkButton*)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+				NodeGtkButton *button;
+				NODE_GTK_GET_REF(object, button, NodeGtkButton);
+				return button;
 			}
 
 	};

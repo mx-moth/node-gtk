@@ -11,7 +11,7 @@ namespace nodeGtk {
 			// For getting the underlying GtkWidget
 			static inline GtkMisc* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_MISC(ObjectWrap::Unwrap<NodeGtkMisc>(obj)->widget);
+				return GTK_MISC(ObjectWrap::Unwrap<NodeGtkMisc>(obj)->getWidget());
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);

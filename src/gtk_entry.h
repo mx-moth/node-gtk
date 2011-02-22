@@ -15,6 +15,7 @@ namespace nodeGtk {
 			 * Constructor. Creates a new NodeGtkEntry, which will wrap a new GtkEntry
 			 */
 			NodeGtkEntry();
+			NodeGtkEntry(GtkEntry *entry);
 
 			/**
 			 * Checks to see if a v8::Object is a NodeGtkEntry in disguise
@@ -51,7 +52,7 @@ namespace nodeGtk {
 			 */
 			static inline GtkEntry* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return GTK_ENTRY(ObjectWrap::Unwrap<NodeGtkEntry>(obj)->widget);
+				return GTK_ENTRY(ObjectWrap::Unwrap<NodeGtkEntry>(obj)->getWidget());
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
@@ -65,7 +66,9 @@ namespace nodeGtk {
 			 *   object - The GtkEntry that holds the reference
 			 */
 			static NodeGtkEntry* From(GtkEntry *object) {
-				return (NodeGtkEntry*)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+				NodeGtkEntry *button;
+				NODE_GTK_GET_REF(object, button, NodeGtkEntry);
+				return button;
 			}
 
 	};

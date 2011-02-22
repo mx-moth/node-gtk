@@ -17,6 +17,12 @@
 #include "gtk_misc.h"
 #include "gtk_label.h"
 #include "gtk_tree_store.h"
+#include "gtk_tree_iter.h"
+#include "gtk_tree_view.h"
+#include "gtk_tree_view_column.h"
+#include "gtk_cell_renderer.h"
+#include "gtk_cell_renderer_text.h"
+#include "gtk_cell_renderer_toggle.h"
 
 namespace nodeGtk {
 
@@ -129,6 +135,7 @@ static struct econtext default_context;
 static Handle<Value> GtkInit (const Arguments &args) {
   HandleScope scope;
   gtk_init(NULL, NULL);
+  g_type_init();
   return Undefined();
 }
 
@@ -155,63 +162,12 @@ extern "C" void init(Handle<Object> target) {
   GTK_ATTACH_FUNCTION(target, "main", GtkMain);
   GTK_ATTACH_FUNCTION(target, "main_quit", GtkMainQuit);
 
-  // Position constants.
-  GTK_DEFINE_CONSTANT(target, "WIN_POS_NONE",             GTK_WIN_POS_NONE);
-  GTK_DEFINE_CONSTANT(target, "WIN_POS_CENTER",           GTK_WIN_POS_CENTER);
-  GTK_DEFINE_CONSTANT(target, "WIN_POS_MOUSE",            GTK_WIN_POS_MOUSE);
-  GTK_DEFINE_CONSTANT(target, "WIN_POS_CENTER_ALWAYS",    GTK_WIN_POS_CENTER_ALWAYS);
-  GTK_DEFINE_CONSTANT(target, "WIN_POS_CENTER_ON_PARENT", GTK_WIN_POS_CENTER_ON_PARENT);
-
-  // MessageDialog constants
-  GTK_DEFINE_CONSTANT(target, "DIALOG_MODAL",               GTK_DIALOG_MODAL);
-  GTK_DEFINE_CONSTANT(target, "DIALOG_DESTROY_WITH_PARENT", GTK_DIALOG_DESTROY_WITH_PARENT);
-  GTK_DEFINE_CONSTANT(target, "DIALOG_NO_SEPARATOR",        GTK_DIALOG_NO_SEPARATOR);
-
-  // Message types.
-  GTK_DEFINE_CONSTANT(target, "MESSAGE_INFO",     GTK_MESSAGE_INFO);
-  GTK_DEFINE_CONSTANT(target, "MESSAGE_WARNING",  GTK_MESSAGE_WARNING);
-  GTK_DEFINE_CONSTANT(target, "MESSAGE_QUESTION", GTK_MESSAGE_QUESTION);
-  GTK_DEFINE_CONSTANT(target, "MESSAGE_ERROR",    GTK_MESSAGE_ERROR);
-  GTK_DEFINE_CONSTANT(target, "MESSAGE_OTHER",    GTK_MESSAGE_OTHER);
-
-  // Buttons.
-  GTK_DEFINE_CONSTANT(target, "BUTTONS_NONE",      GTK_BUTTONS_NONE);
-  GTK_DEFINE_CONSTANT(target, "BUTTONS_OK",        GTK_BUTTONS_OK);
-  GTK_DEFINE_CONSTANT(target, "BUTTONS_CLOSE",     GTK_BUTTONS_CLOSE);
-  GTK_DEFINE_CONSTANT(target, "BUTTONS_CANCEL",    GTK_BUTTONS_CANCEL);
-  GTK_DEFINE_CONSTANT(target, "BUTTONS_YES_NO",    GTK_BUTTONS_YES_NO);
-  GTK_DEFINE_CONSTANT(target, "BUTTONS_OK_CANCEL", GTK_BUTTONS_OK_CANCEL);
-
-  // Position
-  GTK_DEFINE_CONSTANT(target, "POS_TOP", GTK_POS_TOP);
-  GTK_DEFINE_CONSTANT(target, "POS_RIGHT", GTK_POS_RIGHT);
-  GTK_DEFINE_CONSTANT(target, "POS_BOTTOM", GTK_POS_BOTTOM);
-  GTK_DEFINE_CONSTANT(target, "POS_LEFT", GTK_POS_LEFT);
-
-  // Response constants
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_NONE",         GTK_RESPONSE_NONE);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_REJECT",       GTK_RESPONSE_REJECT);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_ACCEPT",       GTK_RESPONSE_ACCEPT);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_DELETE_EVENT", GTK_RESPONSE_DELETE_EVENT);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_OK",           GTK_RESPONSE_OK);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_CANCEL",       GTK_RESPONSE_CANCEL);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_CLOSE",        GTK_RESPONSE_CLOSE);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_YES",          GTK_RESPONSE_YES);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_NO",           GTK_RESPONSE_NO);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_APPLY",        GTK_RESPONSE_APPLY);
-  GTK_DEFINE_CONSTANT(target, "RESPONSE_HELP",         GTK_RESPONSE_HELP);
-
-  // Direction type constants
-  GTK_DEFINE_CONSTANT(target, "DIR_TAB_FORWARD",       GTK_DIR_TAB_FORWARD);
-  GTK_DEFINE_CONSTANT(target, "DIR_TAB_BACKWARD",      GTK_DIR_TAB_BACKWARD);
-  GTK_DEFINE_CONSTANT(target, "DIR_UP",                GTK_DIR_UP);
-  GTK_DEFINE_CONSTANT(target, "DIR_DOWN",              GTK_DIR_DOWN);
-  GTK_DEFINE_CONSTANT(target, "DIR_LEFT",              GTK_DIR_LEFT);
-  GTK_DEFINE_CONSTANT(target, "DIR_RIGHT",             GTK_DIR_RIGHT);
 
   GMainContext *gc     = g_main_context_default();
   struct econtext *ctx = &default_context;
 
+  NodeGObject::Initialize(target);
+  NodeGtkObject::Initialize(target);
   NodeGtkWidget::Initialize(target);
   NodeGtkContainer::Initialize(target);
   NodeGtkBin::Initialize(target);
@@ -224,6 +180,12 @@ extern "C" void init(Handle<Object> target) {
   NodeGtkMisc::Initialize(target);
   NodeGtkLabel::Initialize(target);
   NodeGtkTreeStore::Initialize(target);
+  NodeGtkTreeIter::Initialize(target);
+  NodeGtkTreeView::Initialize(target);
+  NodeGtkTreeViewColumn::Initialize(target);
+  NodeGtkCellRenderer::Initialize(target);
+  NodeGtkCellRendererText::Initialize(target);
+  NodeGtkCellRendererToggle::Initialize(target);
 
   ctx->gc  = g_main_context_ref(gc);
   ctx->nfd = 0;

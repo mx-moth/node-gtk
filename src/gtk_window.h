@@ -20,7 +20,7 @@ namespace nodeGtk {
 			 * Parameters:
 			 *   type - The window type
 			 */
-			NodeGtkWindow(GtkWindowType type);
+			NodeGtkWindow(GtkWidget *window);
 
 			/**
 			 * Checks to see if a v8::Object is a Window in disguise
@@ -58,7 +58,7 @@ namespace nodeGtk {
 			static inline GtkWindow* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
 				assert(NodeGtkWindow::HasInstance(obj));
-				return GTK_WINDOW(ObjectWrap::Unwrap<NodeGtkWindow>(obj)->widget);
+				return GTK_WINDOW(ObjectWrap::Unwrap<NodeGtkWindow>(obj)->getWidget());
 			}
 
 			static void SetupMethods (v8::Handle<v8::Object> target);
@@ -71,7 +71,9 @@ namespace nodeGtk {
 			 *   object - The GtkWindow that holds the reference
 			 */
 			static NodeGtkWindow* From(GtkWindow *object) {
-				return (NodeGtkWindow *)(g_object_get_data(G_OBJECT(object), "NodeGTK-ref"));
+				NodeGtkWindow *button;
+				NODE_GTK_GET_REF(object, button, NodeGtkWindow);
+				return button;
 			}
 
 	};

@@ -14,7 +14,14 @@ namespace nodeGtk {
 			// For getting the underlying GtkWidget
 			static inline GtkWidget* Data (v8::Handle<v8::Object> obj) {
 				v8::HandleScope scope;
-				return ObjectWrap::Unwrap<NodeGtkWidget>(obj)->widget;
+				return ObjectWrap::Unwrap<NodeGtkWidget>(obj)->getWidget();
+			}
+
+			virtual inline GtkWidget* getWidget() {
+				return widget;
+			}
+			virtual inline void setWidget(GtkWidget *widget) {
+				this->widget = widget;
 			}
 
 			static void SetupMethods(v8::Handle<v8::Object> target);
@@ -24,6 +31,7 @@ namespace nodeGtk {
 			static void onDestroy (GtkWidget *gktWidget, NodeGtkWidget *widget);
 
 			void addRef();
+			void addRef(GtkWidget *widget);
 
 			/**
 			 * Retrieves a reference to this instance from the widget
