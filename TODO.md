@@ -33,12 +33,14 @@ Object oriented approach
 
 Unsurprisingly, the GTK library functions are designed to work in C++, and not so much in JavaScript. There are much better ways of implementing all of the classes in JavaScript. The final goal of this project is to create wrapper classes for the GTK classes and their associated functions. This will allow code such as the following:
 
-	var button = new gtk.Button({label: "Click me!"});
-	button.signalConnect('click', function() {
-	   console.log("Clicked the button");
-	});
+```js
+var button = new gtk.Button({label: "Click me!"});
+button.signalConnect('click', function() {
+   console.log("Clicked the button");
+});
 
-	var window = new gtk.Window({type: gtk.WINDOW_TYPE});
-	window.set('title', 'Welcome to NodeGTK');
-	window.add(button);
-	window.showAll();
+var window = new gtk.Window({type: gtk.WINDOW_TYPE});
+window.set('title', 'Welcome to NodeGTK');
+window.add(button);
+window.showAll();
+```
