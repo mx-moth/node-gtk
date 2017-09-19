@@ -1,6 +1,8 @@
 NodeGTK
 ========
 
+**This project is not maintained and very out of date.** It was a fun experiment but has not been updated in years. It likely does not compile against current versions of node. There are a few other projects attempting to do the same thing, including https://github.com/jamrizzi/node-gtk3. Go look at those projects instead.
+
 Node.js bindings for GTK 2.6.
 
 Using NodeGTK, you can create fully functional GUI applications in Node.js.
@@ -47,4 +49,4 @@ Quite a bit. This is an initial work in progress release. Many things work, but 
 
 See the [TODO][] list for more details
 
-[TODO]: https://github.com/maelstrom/node-gtk/blob/master/TODO.md
+[TODO]: https://github.com/timheap/node-gtk/blob/master/TODO.md
